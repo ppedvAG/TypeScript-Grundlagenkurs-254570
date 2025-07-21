@@ -1,24 +1,25 @@
-import './style.css'
-import typescriptLogo from './typescript.svg'
-import viteLogo from '/vite.svg'
-import { setupCounter } from './counter.ts'
+import './style.css';
 
 document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
-  <div>
-    <a href="https://vite.dev" target="_blank">
-      <img src="${viteLogo}" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://www.typescriptlang.org/" target="_blank">
-      <img src="${typescriptLogo}" class="logo vanilla" alt="TypeScript logo" />
-    </a>
-    <h1>Vite + TypeScript</h1>
-    <div class="card">
-      <button id="counter" type="button"></button>
-    </div>
-    <p class="read-the-docs">
-      Click on the Vite and TypeScript logos to learn more
-    </p>
-  </div>
-`
+  <h1>Hello Todo-List!</h1>
+  <ul id="list"></ul>
+  <form action="">
+    <label>Aufgabe</label>
+    <input type="text" id="task"><br/>
+    <button id="submit">Neue Aufgabe</button>
+  </form>
+`;
 
-setupCounter(document.querySelector<HTMLButtonElement>('#counter')!)
+const todoList = document.getElementById('list') as HTMLUListElement;
+const taskInput = document.getElementById('task') as HTMLInputElement;
+const submitButton = document.getElementById('submit') as HTMLButtonElement;
+
+submitButton!.addEventListener('click', function (e) {
+    // Default submit action des Forms verhindern
+    // was einen Server Request ausloest
+    e.preventDefault();
+
+    const listItem = document.createElement('li');
+    listItem.innerText = taskInput.value;
+    todoList.appendChild(listItem);
+});
