@@ -2,12 +2,16 @@ import { type InputType, type Task, inputTypes } from '../types/task.types';
 import { addTaskItem, isDued, fullTitle, priorityFromNumber } from './task.service';
 
 export function createElement(parent: HTMLElement, type: InputType, placeholder?: string): HTMLInputElement;
-export function createElement(parent: HTMLElement, tagName: keyof HTMLElementTagNameMap, text?: string): HTMLElement;
-export function createElement(
+export function createElement<K extends keyof HTMLElementTagNameMap>(
     parent: HTMLElement,
-    typeOrTag: InputType | keyof HTMLElementTagNameMap,
+    tagName: K,
     text?: string
-): HTMLElement | HTMLInputElement {
+): HTMLElementTagNameMap[K];
+export function createElement<K extends keyof HTMLElementTagNameMap>(
+    parent: HTMLElement,
+    typeOrTag: InputType | K,
+    text?: string
+): HTMLElementTagNameMap[K] | HTMLInputElement {
     function isInputType(typeOrTag: string): typeOrTag is InputType {
         return inputTypes.includes(typeOrTag as InputType);
     }
@@ -48,6 +52,7 @@ export function drawForm(form: HTMLFormElement, list: HTMLUListElement) {
 
     createElement(form, 'br');
     const submitButton = createElement(form, 'button', 'Neue Aufgabe');
+    submitButton.disabled = true;
     submitButton.addEventListener('click', function (e) {
         // Default submit action des Forms verhindern
         // was einen Server Request ausloest
@@ -58,22 +63,33 @@ export function drawForm(form: HTMLFormElement, list: HTMLUListElement) {
         drawTaskItem(task, priority);
 
         form.reset();
+        submitButton.disabled = true;
+    });
+
+    taskInput.addEventListener('input', function (e) {
+        submitButton.disabled = !taskInput.value;
     });
 
     function drawTaskItem(task: Task, priority: string) {
         const listItem = createElement(list, 'li');
         const checkbox = createElement(listItem, 'checkbox');
+        const div = createElement(listItem, 'div');
+        const title = createElement(div, 'span', fullTitle(task));
+        title.classList.add(priority);
 
-        const span = createElement(listItem, 'span', fullTitle(task));
-        span.classList.add(priority);
+        const labels = createElement(div, 'div');
+        labels.classList.add('label-group');
+        task.labels?.filter(Boolean).forEach((label) => {
+            createElement(labels, 'span', label).classList.add('label');
+        });
 
         if (isDued(task)) {
-            span.classList.add('due');
+            title.classList.add('due');
         }
 
         checkbox.addEventListener('click', function () {
             task.completed = checkbox.checked;
-            span.classList.toggle('completed');
+            div.classList.toggle('completed');
         });
     }
 }

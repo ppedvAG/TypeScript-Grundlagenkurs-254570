@@ -6,7 +6,7 @@ import type { Priority, Task } from '../types/task.types';
 import { DateTime } from 'luxon';
 
 const taskList: Task[] = [];
-const prioMapper: { [key: number]: Priority } = ['low', 'default', 'important'];
+const prioMapper: Record<number, Priority> = ['low', 'default', 'important'];
 
 export function isDued(task: Task): boolean {
     if (!task.dueDate) {
@@ -17,7 +17,7 @@ export function isDued(task: Task): boolean {
 
 export function fullTitle(task: Task): string {
     const relativeTime = task.dueDate ? DateTime.fromJSDate(task.dueDate).toRelative() : '';
-    return `${task.title} (${relativeTime})`;
+    return relativeTime ? `${task.title} (${relativeTime})` : task.title;
 }
 
 export function priorityFromNumber(number: number): Priority {
