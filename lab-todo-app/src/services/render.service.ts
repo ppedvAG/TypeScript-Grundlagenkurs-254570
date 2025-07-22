@@ -1,6 +1,6 @@
 import { type InputType, type Task, inputTypes } from '../types/task.types';
 import TaskItem from './task.model';
-import StorageService from './storage.service';
+// import StorageService from './storage.service';
 import RemoteService from './remote.service';
 
 export function createElement<T>(parent: HTMLElement, type: InputType, placeholder?: string): HTMLInputElement;
@@ -74,7 +74,7 @@ export function drawForm(form: HTMLFormElement, list: HTMLUListElement) {
         setTimeout(() => (errorOutput.innerText = ''), 9900);
     }
 
-    taskInput.addEventListener('input', function (e) {
+    taskInput.addEventListener('input', function () {
         submitButton.disabled = !taskInput.value;
     });
 
@@ -106,6 +106,7 @@ export function drawForm(form: HTMLFormElement, list: HTMLUListElement) {
 
         const remove = createElement(listItem, 'button', '🗑');
         remove.addEventListener('click', function () {
+            debugger;
             storage.deleteItem(task.id);
             list.removeChild(listItem);
         });
