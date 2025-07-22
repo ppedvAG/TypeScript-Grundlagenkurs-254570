@@ -7,6 +7,7 @@ import { DateTime } from 'luxon';
 
 const taskList: Task[] = [];
 const prioMapper: Record<number, Priority> = ['low', 'default', 'important'];
+const prioMapper2: Record<number, Priority> = ['low', 'default', 'important'];
 
 export function isDued(task: Task): boolean {
     if (!task.dueDate) {

@@ -4,7 +4,7 @@
   "description": "Grundlagen TypeScript Kurs",
   "main": "dist/index.js",
   "scripts": {
-    "dev": "tsc && node dist/M005-Generics/index.js",
+    "dev": "tsc && node dist/M006-OOP/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
