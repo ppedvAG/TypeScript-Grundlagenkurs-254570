@@ -1,6 +1,7 @@
 import { type InputType, type Task, inputTypes } from '../types/task.types';
 import TaskItem from './task.model';
 import StorageService from './storage.service';
+import RemoteService from './remote.service';
 
 export function createElement<T>(parent: HTMLElement, type: InputType, placeholder?: string): HTMLInputElement;
 export function createElement<K extends keyof HTMLElementTagNameMap>(
@@ -65,12 +66,23 @@ export function drawForm(form: HTMLFormElement, list: HTMLUListElement) {
         submitButton.disabled = true;
     });
 
+    const errorOutput = createElement(form.parentElement!, 'pre');
+    errorOutput.classList.add('due');
+
+    function setError<T>(message: T) {
+        errorOutput.innerText = `Fehler aufgetreten: ${message}`;
+        setTimeout(() => (errorOutput.innerText = ''), 9900);
+    }
+
     taskInput.addEventListener('input', function (e) {
         submitButton.disabled = !taskInput.value;
     });
 
-    const storage = new StorageService<Task>();
-    storage.loadItems().map(TaskItem.fromTask).forEach(drawTaskItem);
+    // const storage = new StorageService<Task>();
+    // storage.loadItems().map(TaskItem.fromTask).forEach(drawTaskItem);
+
+    const storage = new RemoteService<Task>(setError);
+    storage.loadItems().then((items) => items.map(TaskItem.fromTask).forEach(drawTaskItem));
 
     function addTask(taskInput: string, dueInput: Date | null, prioNumber: number, labelInput: string) {
         const task = new TaskItem(taskInput, dueInput ?? undefined, prioNumber, labelInput.split(','));
