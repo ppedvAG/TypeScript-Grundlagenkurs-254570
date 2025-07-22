@@ -2,6 +2,8 @@
 // der Überladung, da diese Informationen zur Laufzeit entfernt werden würden.
 // verschwinden und wir somit keine Prüfung in der Überladung vornehmen können.
 export const inputTypes = ['checkbox', 'submit', 'color', 'date', 'number', 'search', 'text'] as const;
+
+// Trick um doppelte Typinformationen zu vermeiden
 export type InputType = (typeof inputTypes)[number];
 
 export type Priority = 'important' | 'default' | 'low';
